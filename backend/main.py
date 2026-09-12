@@ -1,5 +1,6 @@
 import numpy as np
 from fastapi import FastAPI, UploadFile, Form, File, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 
 from gemini_helper import extract_features, embed_text, features_to_text
 from cloudinary_helper import upload_image
@@ -10,6 +11,12 @@ from db_helper import (
 )
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 def cosine_similarity(a, b) -> float:
