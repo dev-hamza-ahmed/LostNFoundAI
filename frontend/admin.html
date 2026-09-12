@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard · CampusFind</title>
+<link rel="stylesheet" href="css/styles.css">
+<style> body { display:block !important; place-items:initial; background:var(--cream); min-height:100vh; } </style>
+</head>
+<body class="admin-body">
+
+<div class="admin-shell">
+  <aside class="admin-side">
+    <div class="brand"><span class="mk"><svg class="ic" viewBox="0 0 24 24" style="stroke:#fff;stroke-width:1.8;fill:none"><circle cx="12" cy="12" r="9"/><path d="m16 8-2.4 5.6L8 16l2.4-5.6z"/></svg></span><b>CampusFind</b></div>
+    <a data-view="dashboard" data-ic-nav="home" onclick="goAdmin('dashboard')">Dashboard</a>
+    <a data-view="lost" data-ic-nav="tag" onclick="goAdmin('lost')">Lost Items</a>
+    <a data-view="found" data-ic-nav="box" onclick="goAdmin('found')">Found Items</a>
+    <a data-view="matches" data-ic-nav="sparkle" onclick="goAdmin('matches')">Matches</a>
+    <a data-view="verification" data-ic-nav="shieldcheck" onclick="goAdmin('verification')">Verification</a>
+    <a data-view="reports" data-ic-nav="clipboard" onclick="goAdmin('reports')">Reports</a>
+    <a data-view="settings" data-ic-nav="settings" style="margin-top:12px" onclick="goAdmin('settings')">Settings</a>
+    <a href="index.html" data-ic-nav="chevleft">Back to App</a>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-top" id="adminTop"></div>
+    <div id="adminMain"></div>
+  </main>
+</div>
+
+<script src="js/art.js"></script>
+<script src="js/data.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>
