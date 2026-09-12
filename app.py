@@ -10,21 +10,43 @@ st.set_page_config(page_title="Campus Lost n Found AI", page_icon="🎒", layout
 
 st.markdown("""
 <style>
-.stApp { background: linear-gradient(180deg, #F0F6FF 0%, #FFFFFF 100%); }
+.stApp {
+    background: linear-gradient(180deg, #F0F6FF 0%, #FFFFFF 100%);
+    color: #0B2E52;
+}
 .hero {
     background: linear-gradient(135deg, #1E3A8A, #3B82F6);
-    color: white; border-radius: 16px; padding: 28px 32px; margin-bottom: 20px;
+    color: #FFFFFF;
+    border-radius: 16px; padding: 28px 32px; margin-bottom: 20px;
 }
-.hero h1 { margin: 0; font-size: 28px; }
-.hero p { margin: 6px 0 0; opacity: 0.9; }
+.hero h1 { margin: 0; font-size: 28px; color: #FFFFFF; }
+.hero p { margin: 6px 0 0; color: #DBEAFE; }
+
 div[data-testid="stMetric"] {
-    background: white; border-radius: 12px; padding: 12px 16px;
+    background: #FFFFFF; border-radius: 12px; padding: 12px 16px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.08);
 }
+div[data-testid="stMetricLabel"] { color: #64748B !important; }
+div[data-testid="stMetricValue"] { color: #0B2E52 !important; }
+
 .match-card {
-    background: white; border-radius: 12px; padding: 16px; margin-bottom: 10px;
+    background: #FFFFFF; color: #0B2E52;
+    border-radius: 12px; padding: 16px; margin-bottom: 10px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.08); border-left: 4px solid #3B82F6;
 }
+.match-card p, .match-card span, .match-card div { color: #0B2E52; }
+
+h2, h3, label, .stCaption, p { color: #0B2E52 !important; }
+
+.stTextInput input, .stTextArea textarea {
+    background: #FFFFFF !important; color: #0B2E52 !important;
+    border: 1px solid #CBD5E1 !important;
+}
+
+.stButton button {
+    background: #3B82F6; color: #FFFFFF; border: none; border-radius: 8px;
+}
+.stButton button:hover { background: #2563EB; color: #FFFFFF; }
 </style>
 """, unsafe_allow_html=True)
 
