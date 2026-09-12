@@ -510,28 +510,83 @@ function wireReport(mode){
   }
 });
   } else {
-    $("#submitBtn").addEventListener("click", async ()=>{
-      const desc=$("#f_desc"), loc=$("#f_loc");
-      let ok=true;
-      if(!desc.value.trim()){ desc.classList.add("err"); $("#e_desc").classList.add("show"); ok=false; }
-      if(!loc.value.trim()){ loc.classList.add("err"); $("#e_loc").classList.add("show"); ok=false; }
-      if(!ok){ toast("Please fill the required fields", true); return; }
+  $("#submitBtn").addEventListener("click", async ()=>{
+    const desc = $("#f_desc");
+    const loc = $("#f_loc");
 
-      go("analysis",{mode:"lost"});
-      try{
-        const result = await apiReportLost(desc.value.trim(), loc.value.trim(), $("#f_date").value, $("#f_time").value);
-        CACHE.activeLostId = result.id;
-        CACHE.lastMatches = result.matches;
-        $("#aiHead").textContent = "Done!";
-        $("#aiResult").innerHTML = `
-          <div class="alert ok">${ic("check")}<div><b>Report saved.</b> Found ${result.matches.length} possible match(es).</div></div>
-          <div class="sticky-actions"><button class="btn block lg" onclick="go('matches')">${ic("sparkle")}View Possible Matches</button></div>`;
-      } catch(err){
-        $("#aiResult").innerHTML = `<div class="alert warn">${ic("warn")}<div><b>Something went wrong.</b> ${err.message}</div></div>
-          <div class="sticky-actions"><button class="btn block lg" onclick="back()">Try again</button></div>`;
-      }
-    });
-  }
+    let ok = true;
+
+    if(!desc.value.trim()){
+      desc.classList.add("err");
+      $("#e_desc").classList.add("show");
+      ok = false;
+    }
+
+    if(!loc.value.trim()){
+      loc.classList.add("err");
+      $("#e_loc").classList.add("show");
+      ok = false;
+    }
+
+    if(!ok){
+      toast("Please fill the required fields", true);
+      return;
+    }
+
+    // Capture values BEFORE changing the screen
+    const description = desc.value.trim();
+    const location = loc.value.trim();
+    const date = $("#f_date").value;
+    const time = $("#f_time").value;
+
+    // Now it is safe to change the screen
+    go("analysis",{mode:"lost"});
+
+    try{
+      const result = await apiReportLost(
+        description,
+        location,
+        date,
+        time
+      );
+
+      CACHE.activeLostId = result.id;
+      CACHE.lastMatches = result.matches;
+
+      $("#aiHead").textContent = "Done!";
+
+      $("#aiResult").innerHTML = `
+        <div class="alert ok">
+          ${ic("check")}
+          <div>
+            <b>Report saved.</b>
+            Found ${result.matches.length} possible match(es).
+          </div>
+        </div>
+
+        <div class="sticky-actions">
+          <button class="btn block lg" onclick="go('matches')">
+            ${ic("sparkle")}View Possible Matches
+          </button>
+        </div>
+      `;
+
+    } catch(err){
+      $("#aiResult").innerHTML = `
+        <div class="alert warn">
+          ${ic("warn")}
+          <div>
+            <b>Something went wrong.</b> ${err.message}
+          </div>
+        </div>
+
+        <div class="sticky-actions">
+          <button class="btn block lg" onclick="back()">Try again</button>
+        </div>
+      `;
+    }
+  });
+}
 }
 
 /* ---------------- Verification / recovery ---------------- */
