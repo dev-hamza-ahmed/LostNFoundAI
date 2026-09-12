@@ -1,21 +1,19 @@
-"""Report Lost flow — description-only (no required photo, since the person
-lost the item and may not have a picture of it)."""
 import streamlit as st
+from services.embedding_service import embed_text
+from services.matching_service import find_matches
+from services.mongo_service import insert_lost_item, get_all_found_items
 
 def render():
     st.subheader("💼 Report a Lost Item")
-    st.caption("Tell us about the item you lost. Include as many details as you can.")
-
-    description = st.text_area(
-        "Item Description *", max_chars=1000,
-        placeholder="e.g., Black backpack with Lenovo logo, multiple compartments, red keychain attached. "
-                    "Lost near the library on Apr 25, 2025 around 10:30 AM."
-    )
-    if st.button("📨 Submit Lost Item", use_container_width=False):
+    description = st.text_area("Item Description *", max_chars=1000)
+    if st.button("📨 Submit Lost Item"):
         if not description.strip():
             st.error("Please describe the item.")
             return
-        # TODO: embed_text(description) -> matching_service.find_matches(...) -> mongo_service.insert_lost_item(...)
-        st.success("Lost item reported. Check Possible Matches for AI suggestions.")
+        vector = embed_text(description)
+        lost_id = insert_lost_item({"description": description, "embedding": vector})
+        results = find_matches(description, get_all_found_items(), top_k=5)
+        st.session_state.lost_item_id = lost_id
+        st.session_state.match_results = results
         st.session_state.page = "Possible Matches"
         st.rerun()

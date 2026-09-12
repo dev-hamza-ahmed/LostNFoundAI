@@ -1,19 +1,18 @@
-"""
-Weighted similarity scoring between a lost item and candidate found items.
-Pure math, runs locally — no external calls, safe to re-run as often as needed.
+import numpy as np
+from services.embedding_service import embed_text
 
-score = 0.6 * feature/text similarity
-      + 0.25 * image similarity (if both have photos)
-      + 0.15 * location/time proximity
-"""
+def cosine_similarity(a, b) -> float:
+    a, b = np.array(a), np.array(b)
+    denom = np.linalg.norm(a) * np.linalg.norm(b)
+    return float(np.dot(a, b) / denom) if denom else 0.0
 
-
-def cosine_similarity(vec_a: list[float], vec_b: list[float]) -> float:
-    # TODO: standard cosine similarity (or use numpy/scipy)
-    raise NotImplementedError
-
-
-def find_matches(lost_item: dict, found_items: list[dict], top_k: int = 5) -> list[dict]:
-    """Return found_items ranked by combined similarity score, highest first."""
-    # TODO: for each found_item, compute weighted score, sort, return top_k
-    raise NotImplementedError
+def find_matches(query_text: str, candidates: list[dict], top_k: int = 5) -> list[dict]:
+    query_vec = embed_text(query_text)
+    scored = []
+    for item in candidates:
+        if "embedding" not in item:
+            continue
+        sim = cosine_similarity(query_vec, item["embedding"])
+        scored.append({**item, "score": round(max(sim, 0) * 100)})
+    scored.sort(key=lambda x: x["score"], reverse=True)
+    return scored[:top_k]
