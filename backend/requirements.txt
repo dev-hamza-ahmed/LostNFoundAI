@@ -1,0 +1,8 @@
+fastapi
+python-multipart
+google-genai
+pymongo
+cloudinary
+python-dotenv
+a2wsgi
+numpy
