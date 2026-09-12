@@ -426,28 +426,89 @@ function wireReport(mode){
       up.classList.add("has");
     });
     $("#submitBtn").addEventListener("click", async ()=>{
-      const contact=$("#f_contact");
-      let ok=true;
-      if(!file.files[0]){ up.classList.add("err"); $("#e_photo").classList.add("show"); ok=false; }
-      if(!contact.value.trim()){ contact.classList.add("err"); $("#e_contact").classList.add("show"); ok=false; }
-      if(!ok){ toast("Please fill the required fields", true); return; }
+  const contact = $("#f_contact");
+  const location = $("#f_loc").value.trim();
+  const extra = $("#f_extra").value.trim();
+  const selectedFile = file.files[0];
 
-      go("analysis",{mode:"found"});
-      try{
-        const result = await apiReportFound(file.files[0], $("#f_loc").value.trim(), contact.value.trim(), $("#f_extra").value.trim());
-        $("#aiHead").textContent = "Done!";
-        $("#aiResult").innerHTML = `
-          <div class="card pad"><div class="understand">
-            ${Object.entries(result.features).map(([k,v])=>`<div class="u-row"><span class="k">${k}</span><span class="v">${v}</span></div>`).join("")}
-          </div></div>
-          <div class="alert ok" style="margin-top:16px">${ic("check")}<div><b>Saved to database.</b> Thanks for helping reunite it with its owner.</div></div>
-          <div class="sticky-actions"><button class="btn success block lg" onclick="go('found')">${ic("check")}Done</button></div>`;
-        hydrate($("#aiResult"));
-      } catch(err){
-        $("#aiResult").innerHTML = `<div class="alert warn">${ic("warn")}<div><b>Something went wrong.</b> ${err.message}</div></div>
-          <div class="sticky-actions"><button class="btn block lg" onclick="back()">Try again</button></div>`;
-      }
-    });
+  let ok = true;
+
+  if(!selectedFile){
+    up.classList.add("err");
+    $("#e_photo").classList.add("show");
+    ok = false;
+  }
+
+  if(!contact.value.trim()){
+    contact.classList.add("err");
+    $("#e_contact").classList.add("show");
+    ok = false;
+  }
+
+  if(!ok){
+    toast("Please fill the required fields", true);
+    return;
+  }
+
+  // Save everything BEFORE changing the screen
+  const contactValue = contact.value.trim();
+
+  go("analysis",{mode:"found"});
+
+  try{
+    const result = await apiReportFound(
+      selectedFile,
+      location,
+      contactValue,
+      extra
+    );
+
+    $("#aiHead").textContent = "Done!";
+
+    $("#aiResult").innerHTML = `
+      <div class="card pad">
+        <div class="understand">
+          ${Object.entries(result.features).map(([k,v])=>`
+            <div class="u-row">
+              <span class="k">${k}</span>
+              <span class="v">${v}</span>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+
+      <div class="alert ok" style="margin-top:16px">
+        ${ic("check")}
+        <div>
+          <b>Saved to database.</b>
+          Thanks for helping reunite it with its owner.
+        </div>
+      </div>
+
+      <div class="sticky-actions">
+        <button class="btn success block lg" onclick="go('found')">
+          ${ic("check")}Done
+        </button>
+      </div>
+    `;
+
+    hydrate($("#aiResult"));
+
+  } catch(err){
+    $("#aiResult").innerHTML = `
+      <div class="alert warn">
+        ${ic("warn")}
+        <div>
+          <b>Something went wrong.</b> ${err.message}
+        </div>
+      </div>
+
+      <div class="sticky-actions">
+        <button class="btn block lg" onclick="back()">Try again</button>
+      </div>
+    `;
+  }
+});
   } else {
     $("#submitBtn").addEventListener("click", async ()=>{
       const desc=$("#f_desc"), loc=$("#f_loc");
