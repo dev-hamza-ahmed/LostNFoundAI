@@ -33,7 +33,7 @@ def location_boost(lost_text: str, found_location: str) -> float:
     return 8.0 if any(w in lost_lower for w in words) else 0.0
 
 
-def find_matches(query_text: str, candidates: list) -> list:
+def find_matches(query_text: str, candidates: list, top_k: int = 5) -> list:
     query_vec = embed_text(query_text)
     scored = []
     for item in candidates:
@@ -42,11 +42,9 @@ def find_matches(query_text: str, candidates: list) -> list:
         sim = cosine_similarity(query_vec, item["embedding"]) * 100
         sim += location_boost(query_text, item.get("location", ""))
         scored.append({**item, "score": round(min(sim, 100))})
-    # Keep ALL matches with probability >= 75%
     scored = [item for item in scored if item["score"] >= 75]
-    # Highest probability first
     scored.sort(key=lambda x: x["score"], reverse=True)
-    return scored
+    return scored[:top_k]
 
 
 @app.get("/api/stats")
@@ -109,7 +107,7 @@ def report_lost(
         "time": time,
         "embedding": vector,
     })
-        matches = find_matches(search_text, get_all_found_items())
+            matches = find_matches(search_text, get_all_found_items(), top_k=5)
     return {"id": item_id, "matches": matches}
 
 
