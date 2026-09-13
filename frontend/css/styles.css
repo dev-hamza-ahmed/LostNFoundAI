@@ -572,3 +572,109 @@ img.art { object-fit: cover; }
 .list-plain { display: flex; flex-direction: column; gap: 12px; }
 .lost-text-card { padding: 16px; }
 .lost-text-card .lost-desc { font-size: 13.5px; line-height: 1.5; margin: 8px 0 6px; color: var(--text); }
+
+/* =========================================================
+   Laptop / desktop layout  (>= 1024px)  —  clean web app shell
+   ADDITIVE ONLY. Mobile (<= 480px) and tablet (481–1023px)
+   views are left exactly as they were. No JS/backend changes.
+   The phone frame becomes a full-window web app: a fixed left
+   sidebar (from the bottom tab bar), a clean sticky top header,
+   and a comfortable, left-aligned content column.
+   ========================================================= */
+@media (min-width: 1024px) {
+  body { display: block; background: var(--cream); min-height: 100vh; }
+
+  /* Phone frame -> full window */
+  .device {
+    width: 100%; height: 100vh; max-height: none;
+    border-radius: 0; padding: 0; box-shadow: none; background: var(--cream);
+  }
+  .device::after { display: none; }                /* remove speaker notch */
+  .app {
+    width: 100%; height: 100vh; border-radius: 0;
+    background: var(--cream); padding-left: 256px;  /* room for the sidebar */
+    transition: padding-left .2s ease;
+  }
+  /* Detail screens have no tab bar -> no sidebar, so drop the left gutter */
+  .app:has(.screen.no-tab) { padding-left: 0; }
+
+  /* ---- Bottom tab bar -> fixed left sidebar ---- */
+  .tabbar {
+    position: fixed; top: 0; left: 0; right: auto; bottom: 0;
+    width: 256px; height: 100vh; flex-direction: column;
+    align-items: stretch; justify-content: flex-start; gap: 6px;
+    padding: 124px 18px 22px; border-top: none;
+    border-right: 1px solid var(--line); background: var(--white);
+    backdrop-filter: none;
+  }
+  .tabbar::after {                                  /* small section label above nav */
+    content: "MENU"; position: absolute; top: 96px; left: 32px;
+    font-size: 11px; font-weight: 800; letter-spacing: .12em; color: var(--faint);
+  }
+  .tab {
+    flex: 0 0 auto; flex-direction: row; justify-content: flex-start;
+    gap: 14px; height: 46px; padding: 0 14px; border-radius: 12px;
+    font-size: 14.5px; font-weight: 600; color: var(--text-2);
+    cursor: pointer; transition: background .15s, color .15s;
+  }
+  .tab .ic { width: 21px; height: 21px; }
+  .tab:hover { background: var(--sage-050); color: var(--sage); }
+  .tab.active { background: var(--sage-050); color: var(--sage); }
+  .tab.report-slot { display: none; }              /* replaced by the button below */
+
+  /* ---- FAB -> clean primary "Report" button pinned at the top of the sidebar ---- */
+  .fab {
+    position: fixed; left: 18px; top: 24px; bottom: auto; right: auto;
+    transform: none; width: 220px; height: 48px; border-radius: 12px;
+    border: none;
+    /* #fab gets an inline display:grid from the router, so lay it out AS a grid:
+       flow the icon + label into one horizontal, centred row. */
+    grid-auto-flow: column; grid-auto-columns: max-content;
+    align-items: center; justify-items: center; place-content: center;
+    gap: 8px; overflow: hidden; line-height: 1;
+    box-shadow: 0 6px 16px rgba(63,107,91,.28);
+    transition: background .15s, box-shadow .15s, transform .08s;
+  }
+  .fab .ic { width: 19px; height: 19px; flex: 0 0 auto; stroke-width: 2.4; }
+  .fab::after {
+    content: "Report"; font-family: var(--f-head); font-weight: 700;
+    font-size: 15px; line-height: 1; color: #fff; white-space: nowrap;
+  }
+  .fab:hover { background: var(--sage-600); box-shadow: 0 8px 20px rgba(63,107,91,.34); }
+  .fab:active { transform: scale(.98); }
+
+  /* ---- Clean top header bar ---- */
+  .appbar {
+    height: 66px; padding: 0 40px; background: var(--white);
+    border-bottom: 1px solid var(--line); box-shadow: var(--sh-sm);
+  }
+
+  /* ---- Content column (left-aligned, comfortable width) ---- */
+  .screen {
+    max-width: 1120px; margin: 0;
+    padding: 30px 40px 72px;
+  }
+  .screen.no-tab { max-width: 860px; margin: 0 auto; }   /* detail/forms read better narrower + centered */
+
+  /* ---- Use the extra width for card grids ---- */
+  .grid { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 18px; }
+
+  /* Edge-bleed scrollers align to the padded content instead of phone edges */
+  .h-scroll, .chips { margin-left: 0; margin-right: 0; padding-left: 0; padding-right: 0; }
+  .h-scroll { padding-bottom: 6px; }
+  .chips { margin-bottom: 16px; }
+
+  /* Web-style hover / pointer feedback on interactive elements */
+  .item-card, .rec-card, .menu-row, .report-item, .notif, .stat, .chip, .ab-btn { cursor: pointer; }
+  .item-card, .rec-card { transition: transform .14s, box-shadow .18s; }
+  .item-card:hover, .rec-card:hover { transform: translateY(-3px); box-shadow: var(--sh); }
+  .menu-row { transition: background .15s; }
+  .menu-row:hover { background: var(--sage-050); }
+
+  /* Bottom sheet / report sheet -> centered dialog on a big screen */
+  .backdrop { align-items: center; }
+  .sheet { max-width: 460px; border-radius: 22px; }
+
+  /* Toasts centered rather than pinned above a (now absent) bottom bar */
+  .toast-wrap { left: 50%; right: auto; transform: translateX(-50%); bottom: 26px; width: min(420px, 90%); }
+}
