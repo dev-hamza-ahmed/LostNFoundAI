@@ -109,7 +109,7 @@ def report_lost(
         "time": time,
         "embedding": vector,
     })
-    matches = find_matches(search_text, get_all_found_items(), top_k=5)
+        matches = find_matches(search_text, get_all_found_items())
     return {"id": item_id, "matches": matches}
 
 
