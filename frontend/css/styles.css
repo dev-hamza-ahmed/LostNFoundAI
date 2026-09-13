@@ -571,4 +571,4 @@ img.art { object-fit: cover; }
 
 .list-plain { display: flex; flex-direction: column; gap: 12px; }
 .lost-text-card { padding: 16px; }
-.lost-text-card .lost-desc { font-size: 13.5px; line-height: 1.5; margin: 8px 0 6px; color: var(--ink, #1F2925); }
+.lost-text-card .lost-desc { font-size: 13.5px; line-height: 1.5; margin: 8px 0 6px; color: var(--text); }
