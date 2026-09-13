@@ -52,6 +52,8 @@ async function apiMarkRecovered(lostId){
   return res.json();
 }
 function findCached(id){
-  return CACHE.found.find(i=>i._id===id) || CACHE.lost.find(i=>i._id===id) ||
-         CACHE.lastMatches.find(i=>i._id===id) || null;
+  return CACHE.lastMatches.find(i=>i._id===id) ||
+         CACHE.found.find(i=>i._id===id) ||
+         CACHE.lost.find(i=>i._id===id) ||
+         null;
 }

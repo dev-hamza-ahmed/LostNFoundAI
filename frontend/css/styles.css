@@ -37,6 +37,29 @@
   --f-head: "Manrope", system-ui, sans-serif;
   --f-body: "Inter", system-ui, sans-serif;
   --tab-h: 68px;
+  --tabbar-bg: rgba(255,255,255,.92);
+  --toast-bg: #1F2925;
+}
+
+:root[data-theme="dark"] {
+  --sage-light: #2C4038;
+  --sage-050: #23342C;
+  --cream: #141F1A;
+  --white: #1C2A24;
+  --charcoal: #ECEFEC;
+  --beige-bg: #3A2F22;
+  --success-bg: #1E3226;
+  --warning-bg: #3A2E1B;
+  --error-bg: #3A2020;
+  --text: #ECEFEC;
+  --text-2: #B7C0BA;
+  --muted: #93A29B;
+  --faint: #6B756F;
+  --line: #2A3A32;
+  --line-2: #33453C;
+  --toast-bg: #0B120F;
+  --tabbar-bg: rgba(20,31,26,.92);
+
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -101,7 +124,7 @@ input, textarea, select { font-family: inherit; }
 /* ---------- Bottom tab bar + FAB ---------- */
 .tabbar {
   position: absolute; left: 0; right: 0; bottom: 0; height: var(--tab-h);
-  background: rgba(255,255,255,.92); backdrop-filter: blur(12px);
+  background: var(--tabbar-bg); backdrop-filter: blur(12px);
   border-top: 1px solid var(--line); display: flex; align-items: stretch;
   z-index: 30; padding: 0 6px;
 }
@@ -392,7 +415,8 @@ img.art { object-fit: cover; }
 
 /* ---------- my reports tabs ---------- */
 .seg { display: flex; background: var(--sage-050); border-radius: 13px; padding: 4px; margin: 8px 0 16px; }
-.seg button { flex: 1; height: 38px; border-radius: 10px; font-size: 13px; font-weight: 700; color: var(--text-2); }
+.seg button { flex: 1; height: 38px; border-radius: 10px; font-size: 13px; font-weight: 700; color: var(--text-2); display: flex; align-items: center; justify-content: center; gap: 6px; }
+.seg button .ic { width: 16px; height: 16px; }
 .seg button.active { background: var(--white); color: var(--sage); box-shadow: var(--sh-sm); }
 .report-item { display: flex; gap: 13px; align-items: center; padding: 12px; margin-bottom: 11px; }
 .report-item .art-wrap { width: 58px; height: 58px; border-radius: 13px; flex-shrink: 0; }
@@ -443,7 +467,7 @@ img.art { object-fit: cover; }
 
 /* ---------- toast ---------- */
 .toast-wrap { position: absolute; left: 16px; right: 16px; bottom: calc(var(--tab-h) + 16px); z-index: 60; display: flex; flex-direction: column; gap: 9px; pointer-events: none; }
-.toast { background: var(--charcoal); color: #fff; padding: 13px 16px; border-radius: 13px; font-size: 13.5px; font-weight: 600; box-shadow: var(--sh-lg); display: flex; gap: 10px; align-items: center; animation: toastin .25s ease; }
+.toast { background: var(--toast-bg); color: #fff; padding: 13px 16px; border-radius: 13px; font-size: 13.5px; font-weight: 600; box-shadow: var(--sh-lg); display: flex; gap: 10px; align-items: center; animation: toastin .25s ease; }
 .toast .ic { width: 18px; height: 18px; color: #8fd3a8; flex-shrink: 0; }
 .toast.err .ic { color: #e79b9b; }
 @keyframes toastin { from { transform: translateY(14px); opacity: 0; } to { transform: none; opacity: 1; } }

@@ -36,9 +36,9 @@ function back(){
 function renderHeader(s, params){
   const bar = $("#appbar");
   bar.className = "appbar" + (s.solid ? " solid" : "");
-  const actions = `<div class="ab-actions"><button class="ab-btn" onclick="go('profile')">${ic("user")}</button></div>`;
+  const actions = `<div class="ab-actions"><button class="ab-btn" onclick="go('settings')">${ic("settings")}</button></div>`;
   if(s.header === "logo"){
-    bar.innerHTML = `<div class="ab-logo"><span class="mk">${ic("compass")}</span><b>CampusFind</b></div>${actions}`;
+    bar.innerHTML = `<div class="ab-logo"><span class="mk">${ic("compass")}</span><b>Lost n Found AI</b></div>${actions}`;
   } else if(s.header === "back"){
     bar.innerHTML = `<button class="ab-back" onclick="back()">${ic("chevleft")}</button>
       <div><div class="ab-title">${typeof s.title==="function"?s.title(params):s.title}</div></div>`;
@@ -117,7 +117,7 @@ const SCREENS = {
   home:{ header:"logo", tab:"home", after(){ loadHome(); },
     render(){
       return `
-      <div class="greet">Good morning 👋</div>
+      <div class="greet">Welcome 👋</div>
       <div class="greet-h">Find what you've lost.</div>
 
       <div class="hero">
@@ -136,10 +136,10 @@ const SCREENS = {
         <div class="stat"><div class="ic-b" style="background:var(--sage-light);color:var(--sage)">${ic("sparkle")}</div><div class="n">–</div><div class="l">Total</div></div>
       </div>
 
-      <div class="sec"><h2>Recent Reports</h2><a class="link" onclick="go('lost')">See all ${ic("chevright")}</a></div>
+      <div class="sec"><h2>Recent Reports</h2><a class="link" onclick="go('found')">See all ${ic("chevright")}</a></div>
       <div class="h-scroll" id="homeRecent">${skCards(3)}</div>
 
-      <div class="sec"><h2>How CampusFind Works</h2></div>
+      <div class="sec"><h2>How Lost n Found Works</h2></div>
       <div class="hiw">
         <div class="step"><div class="n">${ic("camera")}</div><span class="idx">01</span><b>Report</b><p>Add a photo &amp; details of the item.</p></div>
         <div class="step"><div class="n">${ic("sparkle")}</div><span class="idx">02</span><b>AI Matches</b><p>AI finds visually similar items.</p></div>
@@ -296,7 +296,7 @@ const SCREENS = {
           <h2 style="font-size:20px">Verify Your Item</h2>
           <p>Before connecting you with the finder, verify details only the true owner should know.</p></div>
         <div style="margin-top:20px" id="vform">
-          <div class="field"><div class="q-label">1. What is inside the front pocket?</div><input class="input" id="v1" placeholder="e.g. charger, notebook, pen..."></div>
+          <div class="field"><div class="q-label">1. What is inside the pocket? (if any)</div><input class="input" id="v1" placeholder="e.g. charger, notebook, pen..."></div>
           <div class="field"><div class="q-label">2. What unique mark does the item have?</div><input class="input" id="v2" placeholder="e.g. scratch, sticker, initials..."></div>
           <div class="field"><div class="q-label">3. Describe another identifying detail.</div><input class="input" id="v3" placeholder="e.g. zipper colour, brand tag..."></div>
         </div>
@@ -330,24 +330,24 @@ const SCREENS = {
         </div><div id="reportsList">${skCards(3)}</div>`;
     }},
 
-  /* ---- PROFILE ---- */
-  profile:{ header:"back", title:"Profile", tabbar:false,
+  settings:{ header:"back", title:"Settings", tabbar:false, after(){ wireThemeToggle(); },
     render(){
-      const row=(icn,label,go,danger)=>`<div class="menu-row ${danger?"danger":""}" onclick="${go}"><div class="mi">${ic(icn)}</div><b>${label}</b><span class="chev">${ic("chevright")}</span></div>`;
+      const row=(icn,label,go)=>`<div class="menu-row" onclick="${go}"><div class="mi">${ic(icn)}</div><b>${label}</b><span class="chev">${ic("chevright")}</span></div>`;
+      const current = document.documentElement.getAttribute("data-theme") || "light";
       return `
-        <div class="profile-head"><div class="pa">${ic("user")}</div><h2>Campus Student</h2><p>student@campus.edu</p></div>
-        <div class="menu-list" style="margin-bottom:16px">
-          ${row("clipboard","My Reports","go('myReports')")}
-          ${row("bell","Notifications","go('notifications')")}
-          ${row("layers","Admin Dashboard","window.open('admin.html','_blank')")}
+        <div class="menu-list" style="margin-bottom:16px;padding:16px">
+          <b>Appearance</b>
+          <div class="seg" id="themeSeg" style="margin-top:10px">
+            <button data-theme-choice="light" class="${current==='light'?'active':''}">${ic('sun')}<span>Light</span></button>
+            <button data-theme-choice="dark" class="${current==='dark'?'active':''}">${ic('moon')}<span>Dark</span></button>
+          </div>
         </div>
         <div class="menu-list" style="margin-bottom:16px">
-          ${row("help","Help &amp; Support","toast('Support: help@campusfind.edu')")}
+          ${row("help","Help &amp; Support","toast('Support: help@lostnfoundai.edu')")}
           ${row("lock","Privacy","toast('Your data stays private')")}
-          ${row("info","About CampusFind","openAbout()")}
+          ${row("info","About Lost n Found AI","openAbout()")}
         </div>
-        <div class="menu-list">${row("logout","Logout","confirmLogout()",true)}</div>
-        <p class="muted center" style="font-size:11.5px;margin-top:18px">CampusFind v1.0 · Smarter Matching. Faster Recovery.</p>
+        <p class="muted center" style="font-size:11.5px;margin-top:18px">Lost n Found AI v1.0 · Smarter Matching. Faster Recovery.</p>
       `;
     }}
 };
@@ -643,7 +643,7 @@ function openReportSheet(){
     </div>`);
 }
 function openAbout(){
-  openSheet(`<h3>About CampusFind</h3><p class="muted" style="font-size:13.5px;line-height:1.6;margin:8px 0 16px">CampusFind uses computer vision and AI to match lost and found items on campus. AI only suggests <b>possible</b> matches — students verify identifying details before recovery, so ownership is always human-confirmed.</p><button class="btn block" onclick="closeSheet()">Got it</button>`);
+  openSheet(`<h3>About Lost n Found AI</h3><p class="muted" style="font-size:13.5px;line-height:1.6;margin:8px 0 16px">Lost n Found AI uses computer vision and AI to match lost and found items on campus. AI only suggests <b>possible</b> matches — students verify identifying details before recovery, so ownership is always human-confirmed.</p><button class="btn block" onclick="closeSheet()">Got it</button>`);
 }
 function confirmLogout(){
   const b=$("#backdrop");
@@ -656,6 +656,26 @@ function toast(msg, err){
   let w=$(".toast-wrap"); if(!w){ w=document.createElement("div"); w.className="toast-wrap"; $(".app").appendChild(w); }
   const t=document.createElement("div"); t.className="toast"+(err?" err":""); t.innerHTML=ic(err?"warn":"check")+`<span>${msg}</span>`;
   w.appendChild(t); setTimeout(()=>{ t.style.opacity="0"; t.style.transition="opacity .3s"; },2400); setTimeout(()=>t.remove(),2800);
+}
+
+/* ---------------- Theme (dark / light) ---------------- */
+function initTheme(){
+  const saved = localStorage.getItem("lnf_theme") || "light";
+  document.documentElement.setAttribute("data-theme", saved);
+}
+function setTheme(mode){
+  document.documentElement.setAttribute("data-theme", mode);
+  localStorage.setItem("lnf_theme", mode);
+}
+function wireThemeToggle(){
+  const seg = $("#themeSeg"); if(!seg) return;
+  seg.querySelectorAll("button").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      setTheme(btn.dataset.themeChoice);
+      seg.querySelectorAll("button").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+    });
+  });
 }
 
 /* ---------------- Splash + onboarding ---------------- */
@@ -689,6 +709,7 @@ function startApp(){ go("home",{},{back:true}); }
 
 /* ---------------- Init ---------------- */
 document.addEventListener("DOMContentLoaded",()=>{
+  initTheme();
   $("#fab").addEventListener("click", openReportSheet);
   renderTabs("home");
   bootSplash();
